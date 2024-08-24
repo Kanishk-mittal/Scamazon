@@ -1,0 +1,27 @@
+# Ignore compiled Python files
+*.pyc
+
+# Ignore Flask cache
+Backend/__pycache__/
+
+# Ignore Node.js dependencies
+node_modules/
+
+# Ignore build artifacts
+build/
+dist/
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore yarn.lock for yarn
+yarn.lock
+
+# Ignore Backend virtual environment
+Backend/env/
+
+# Ignore Frontend node modules
+Frontend/node_modules/
+
+*.pdf
