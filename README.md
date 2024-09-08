@@ -30,104 +30,169 @@ Scamazon is an e-commerce website where users can buy and sell products. It is a
     1. Track order
     2. Cancel order
     3. Return order
-    4. Review
+    4. Reviews
     5. Payment history
 
 ## ER Diagram
 ![ER Diagram](./ER_diagram.png)
 
 ## Tables
-
 ### 1. Seller
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| seller_id     | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| username      | VARCHAR(50)  | NOT NULL                   |
-| email         | VARCHAR(100) | NOT NULL, UNIQUE           |
-| password      | VARCHAR(255) | NOT NULL                   |
-| address       | TEXT         |                            |
-| profile_pic   | VARCHAR(255) |                            |
-| age           | INT          |                            |
-| contact       | VARCHAR(15)  |                            |
-| dob           | DATE         |                            |
-| shop_name     | VARCHAR(100) |                            |
-| prop_name     | VARCHAR(100) |                            |
-| GST_no        | VARCHAR(20)  | UNIQUE                     |
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| seller_id        | varchar(6)  | NO   | PRI | NULL    |       |
+| proprietor_name  | varchar(50) | NO   |     | NULL    |       |
+| shop_name        | varchar(50) | NO   |     | NULL    |       |
+| email            | varchar(50) | NO   |     | NULL    |UNIQUE |
+| password         | varchar(50) | NO   |     | NULL    |       |
+| username         | varchar(50) | NO   |     | NULL    |UNIQUE |
+| contact          | varchar(10) | NO   |     | NULL    |UNIQUE |
+| address          | varchar(100)| NO   |     | NULL    |       |
+| GSTIN            | varchar(15) | NO   |     | NULL    |UNIQUE |
+| rating           | float       | NO   |     | NULL    |       |
 
 ### 2. Product
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| product_id    | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| product_name  | VARCHAR(100) | NOT NULL                   |
-| category      | VARCHAR(50)  |                            |
-| description   | TEXT         |                            |
-| picture       | VARCHAR(255) |                            |
-| rating        | DECIMAL(2,1) |                            |
-| price         | DECIMAL(10,2)| NOT NULL                   |
-| seller_id     | INT          | FOREIGN KEY (seller_id) REFERENCES Seller(seller_id)|
-| stock_left    | INT          | NOT NULL                   |
-| offer         | VARCHAR(100) |                            |
-| warranty      | VARCHAR(100) |                            |
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| product_id       | varchar(6)  | NO   | PRI | NULL    |       |
+| Name             | varchar(50) | NO   |     | NULL    |       |
+| category         | varchar(50) | NO   |     | NULL    |       |
+| description      | varchar(100)| YES  |     | NULL    |       |
+| price            | float       | NO   |     | NULL    |       |
+| stock            | int         | NO   |     | NULL    |       |
+| rating           | float       | YES  |     | NULL    |       |
+| seller_id        | varchar(6)  | NO   | MUL | NULL    |       |
+| warranty         | float       | YES  |     | NULL    |       |
+| offer            | float       | YES  |     | NULL    |       |
 
-### 3. User
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| user_id       | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| user_name     | VARCHAR(50)  | NOT NULL                   |
-| date_of_birth | DATE         |                            |
-| password      | VARCHAR(255) | NOT NULL                   |
-| contact       | VARCHAR(15)  |                            |
-| age           | INT          |                            |
-| profile_pic   | VARCHAR(255) |                            |
-| address       | TEXT         |                            |
-| email         | VARCHAR(100) | NOT NULL, UNIQUE           |
+### 3. Orders
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| order_id         | varchar(6)  | NO   | PRI | NULL    |       |
+| order_date       | date        | NO   |     | NULL    |       |
+| status           | varchar(50) | NO   |     | NULL    |       |
+| product_id       | varchar(6)  | NO   | MUL | NULL    |       |
+| user_id          | varchar(6)  | NO   | MUL | NULL    |       |
+| quantity         | int         | NO   |     | NULL    |       |
+| received_date    | date        | YES  |     | NULL    |       |
 
-### 4. Cart
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| item_id       | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| user_id       | INT          | FOREIGN KEY (user_id) REFERENCES User(user_id)|
-| product_id    | INT          | FOREIGN KEY (product_id) REFERENCES Product(product_id)|
+### 4. User
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| user_id          | varchar(6)  | NO   | PRI | NULL    |       |
+| username         | varchar(50) | NO   |     | NULL    |UNIQUE |
+| email            | varchar(50) | NO   |     | NULL    |UNIQUE |
+| password         | varchar(50) | NO   |     | NULL    |       |
+| contact          | varchar(10) | NO   |     | NULL    |UNIQUE |
+| address          | varchar(100)| NO   |     | NULL    |       |
 
-### 5. Orders
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| order_id      | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| product_id    | INT          | FOREIGN KEY (product_id) REFERENCES Product(product_id)|
-| user_id       | INT          | FOREIGN KEY (user_id) REFERENCES User(user_id)|
-| status        | VARCHAR(50)  |                            |
-| order_date    | DATE         | NOT NULL                   |
-| received_date | DATE         |                            |
+### 5. Cart
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| user_id          | varchar(6)  | NO   | MUL | NULL    |       |
+| product_id       | varchar(6)  | NO   | MUL | NULL    |       |
+| quantity         | int         | NO   |     | 1       |       |
 
-### 6. Reviews
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| review_id     | INT          | PRIMARY KEY, AUTO_INCREMENT|
-| user_id       | INT          | FOREIGN KEY (user_id) REFERENCES User(user_id)|
-| comments      | TEXT         |                            |
-| ratings       | DECIMAL(2,1) |                            |
+### 6. Product_Review
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| user_id          | varchar(6)  | NO   | MUL | NULL    |       |
+| product_id       | varchar(6)  | NO   | MUL | NULL    |       |
+| order_id         | varchar(6)  | NO   | MUL | NULL    |       |
+| rating           | float       | NO   |     | NULL    |       |
+| review           | varchar(100)| YES  |     | NULL    |       |
 
-### 7. Reviews Of Product (N:M)
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| review_id     | INT          | FOREIGN KEY (review_id) REFERENCES Reviews(review_id)|
-| product_id    | INT          | FOREIGN KEY (product_id) REFERENCES Product(product_id)|
-| PRIMARY KEY   | (review_id, product_id) |
+### 7. Transaction
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| transaction_id   | varchar(6)  | NO   | PRI | NULL    |       |
+| user_id          | varchar(6)  | NO   | MUL | NULL    |       |
+| order_id         | varchar(6)  | NO   | MUL | NULL    |       |
+| amount           | float       | NO   |     | NULL    |       |
+| payment_date     | date        | NO   |     | NULL    |       |
 
-### 8. User Buys Product (M:N)
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| user_id       | INT          | FOREIGN KEY (user_id) REFERENCES User(user_id)|
-| product_id    | INT          | FOREIGN KEY (product_id) REFERENCES Product(product_id)|
-| PRIMARY KEY   | (user_id, product_id) |
+### Seller_Review
+| Field            | Type        | Null | Key | Default | Extra |
+|------------------|-------------|------|-----|---------|-------|
+| user_id          | varchar(6)  | NO   | MUL | NULL    |       |
+| seller_id        | varchar(6)  | NO   | MUL | NULL    |       |
+| order_id         | varchar(6)  | NO   | MUL | NULL    |       |
+| rating           | float       | NO   |     | NULL    |       |
+| review           | varchar(100)| YES  |     | NULL    |       |
 
-### 9. Product and Seller
-| Column Name   | Data Type    | Constraints                |
-|---------------|--------------|----------------------------|
-| product_id    | INT          | FOREIGN KEY (product_id) REFERENCES Product(product_id)|
-| seller_id     | INT          | FOREIGN KEY (seller_id) REFERENCES Seller(seller_id)|
-| PRIMARY KEY   | (product_id, seller_id) |
 
+## Triggers
+### 1. Update_rating
+```sql
+CREATE TRIGGER Update_rating
+AFTER INSERT ON Product_Review
+FOR EACH ROW
+BEGIN
+    DECLARE avg_rating FLOAT;
+    DECLARE total_rating FLOAT;
+    DECLARE total_reviews INT;
+    DECLARE new_rating FLOAT;
+    SELECT SUM(rating) INTO total_rating FROM Product_Review WHERE product_id = NEW.product_id;
+    SELECT COUNT(*) INTO total_reviews FROM Product_Review WHERE product_id = NEW.product_id;
+    SET avg_rating = total_rating / total_reviews;
+    UPDATE Product SET rating = avg_rating WHERE product_id = NEW.product_id;
+END;
+```
+
+### 2. Update_seller_rating
+```sql
+CREATE TRIGGER Update_seller_rating
+AFTER INSERT ON Seller_Review
+FOR EACH ROW
+BEGIN
+    DECLARE avg_rating FLOAT;
+    DECLARE total_rating FLOAT;
+    DECLARE total_reviews INT;
+    DECLARE new_rating FLOAT;
+    SELECT SUM(rating) INTO total_rating FROM Seller_Review WHERE seller_id = NEW.seller_id;
+    SELECT COUNT(*) INTO total_reviews FROM Seller_Review WHERE seller_id = NEW.seller_id;
+    SET avg_rating = total_rating / total_reviews;
+    UPDATE Seller SET rating = avg_rating WHERE seller_id = NEW.seller_id;
+END;
+```
+
+## Relations
+### 1. Seller
+- One to Many relation with Product
+- One to Many relation with Seller_Review
+
+### 2. Product
+- Many to One relation with Seller
+- One to Many relation with Orders
+- One to Many relation with Product_Review
+
+### 3. Orders
+- Many to One relation with Product
+- Many to One relation with User
+
+### 4. User
+- One to Many relation with Orders
+- One to Many relation with Cart
+- One to Many relation with Product_Review
+- One to Many relation with Transaction
+
+### 5. Cart
+- Many to One relation with User
+- Many to One relation with Product
+
+### 6. Product_Review
+- Many to One relation with User
+- Many to One relation with Product
+- Many to One relation with Orders
+
+### 7. Transaction
+- Many to One relation with User
+- Many to One relation with Orders
+
+### 8. Seller_Review
+- Many to One relation with User
+- Many to One relation with Seller
+- Many to One relation with Orders
 
 ## Contributors
 - [Kanishk mittal](https://github.com/Kanishk-mittal)
