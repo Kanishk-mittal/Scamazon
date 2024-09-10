@@ -3,11 +3,11 @@ USE Scamazon;
 
 -- Insert data into Seller table
 INSERT INTO Seller (seller_id, proprietor_name, shop_name, email, password, username, contact, address, GSTIN, rating) VALUES
-('S001', 'John Doe', 'John Electronics', 'john@example.com', 'password123', 'johnDoe', '9876543210', '123 Main St', 'GST1234567890123', 4.5),
-('S002', 'Jane Smith', 'Jane Boutique', 'jane@example.com', 'pass456', 'janeSmith', '8765432109', '456 Elm St', 'GST9876543210123', 4.0),
-('S003', 'Alice Johnson', 'Alice’s Artifacts', 'alice@example.com', 'alicepass', 'aliceJohnson', '7654321098', '789 Maple St', 'GST3456789012345', 4.8),
-('S004', 'Bob Brown', 'Bob’s Books', 'bob@example.com', 'bobpass', 'bobBrown', '6543210987', '101 Birch St', 'GST4567890123456', 4.2),
-('S005', 'Carol White', 'Carol’s Crafts', 'carol@example.com', 'carolpass', 'carolWhite', '5432109876', '202 Cedar St', 'GST5678901234567', 4.6);
+('S001', 'John Doe', 'John Electronics', 'john@example.com', 'password123', 'johnDoe', '9876543210', '123 Main St', 'GST123456789012', 4.5),
+('S002', 'Jane Smith', 'Jane Boutique', 'jane@example.com', 'pass456', 'janeSmith', '8765432109', '456 Elm St', 'GST987654321012', 4.0),
+('S003', 'Alice Johnson', 'Alice’s Artifacts', 'alice@example.com', 'alicepass', 'aliceJohnson', '7654321098', '789 Maple St', 'GST345678901234', 4.8),
+('S004', 'Bob Brown', 'Bob’s Books', 'bob@example.com', 'bobpass', 'bobBrown', '6543210987', '101 Birch St', 'GST456789012345', 4.2),
+('S005', 'Carol White', 'Carol’s Crafts', 'carol@example.com', 'carolpass', 'carolWhite', '5432109876', '202 Cedar St', 'GST567890123456', 4.6);
 
 -- Insert data into User table
 INSERT INTO User (user_id, username, email, password, contact, address) VALUES
