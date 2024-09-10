@@ -111,7 +111,7 @@ Scamazon is an e-commerce website where users can buy and sell products. It is a
 | amount           | float       | NO   |     | NULL    |       |
 | payment_date     | date        | NO   |     | NULL    |       |
 
-### Seller_Review
+### 8. Seller_Review
 | Field            | Type        | Null | Key | Default | Extra |
 |------------------|-------------|------|-----|---------|-------|
 | user_id          | varchar(6)  | NO   | MUL | NULL    |       |
