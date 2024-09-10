@@ -25,3 +25,4 @@ Backend/env/
 Frontend/node_modules/
 
 *.pdf
+.env
