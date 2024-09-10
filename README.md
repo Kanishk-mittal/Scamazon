@@ -199,4 +199,4 @@ END;
 - [Sayan Sinha](https://github.com/sayan23bcy6)
 - [Roshan Binoj](https://github.com/roshanbinoj-iiitk)
 - [Nikhil Kumar](https://github.com/sawarn-nik)
-- [Vishwanath praksah darur]()
+- [Vishwanath Prakash Darur](https://github.com/vishwanathdarur)
