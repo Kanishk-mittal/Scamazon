@@ -17,3 +17,17 @@ class cart:
         cur.execute(f"INSERT INTO Cart VALUES({self.user_id},{self.product_id},{self.quantity})")
         con.commit()
         con.close()
+    def delete_sql(self):
+        load_dotenv()
+        con=msc.connect(host='localhost',user='root',password=os.getenv('sql_password'),database='Scamazon')
+        cur=con.cursor()
+        cur.execute(f"DELETE FROM Cart WHERE user_id={self.user_id} AND product_id={self.product_id}")
+        con.commit()
+        con.close()
+    def update_sql(self):
+        load_dotenv()
+        con=msc.connect(host='localhost',user='root',password=os.getenv('sql_password'),database='Scamazon')
+        cur=con.cursor()
+        cur.execute(f"UPDATE Cart SET quantity={self.quantity} WHERE user_id={self.user_id} AND product_id={self.product_id}")
+        con.commit()
+        con.close()

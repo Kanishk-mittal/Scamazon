@@ -1,7 +1,7 @@
 -- Creating the database for the Scamazon project
-CREATE DATABESE IF NOT EXISTS 'Scamazon';
+CREATE DATABASE IF NOT EXISTS Scamazon;
 
-USE 'Scamazon';
+USE Scamazon;
 
 -- Creating tables for details refer to README.md
 CREATE TABLE Seller (
@@ -31,6 +31,15 @@ CREATE TABLE Product (
     FOREIGN KEY (seller_id) REFERENCES Seller(seller_id)
 );
 
+CREATE TABLE User (
+    user_id VARCHAR(6) NOT NULL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(50) NOT NULL,
+    contact VARCHAR(10) NOT NULL UNIQUE,
+    address VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE Orders (
     order_id VARCHAR(6) NOT NULL PRIMARY KEY,
     order_date DATE NOT NULL,
@@ -43,20 +52,10 @@ CREATE TABLE Orders (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
-CREATE TABLE User (
-    user_id VARCHAR(6) NOT NULL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL,
-    contact VARCHAR(10) NOT NULL UNIQUE,
-    address VARCHAR(100) NOT NULL
-);
-
 CREATE TABLE Cart (
     user_id VARCHAR(6) NOT NULL,
     product_id VARCHAR(6) NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
-    PRIMARY KEY (user_id, product_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
@@ -67,7 +66,6 @@ CREATE TABLE Product_Review (
     order_id VARCHAR(6) NOT NULL,
     rating FLOAT NOT NULL,
     review VARCHAR(100),
-    PRIMARY KEY (user_id, product_id, order_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
@@ -89,7 +87,6 @@ CREATE TABLE Seller_Review (
     order_id VARCHAR(6) NOT NULL,
     rating FLOAT NOT NULL,
     review VARCHAR(100),
-    PRIMARY KEY (user_id, seller_id, order_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (seller_id) REFERENCES Seller(seller_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
