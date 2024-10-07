@@ -17,10 +17,11 @@ function Login() {
     }, [navigate]);
 
     return (
-        <div>
-            {/* Your login form */}
-            <h1>Login Page</h1>
-        </div>
+        <>
+            <h1 className="text-3xl font-bold underline">
+                Login Page
+            </h1>
+        </>
     );
 }
 
