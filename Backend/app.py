@@ -52,6 +52,12 @@ def login():
         return jsonify({"verified": True, "id": user[0]}), 200
     else:
         return jsonify({"verified": False, "message": "Invalid credentials"}), 200
+    
+@app.route('/register', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def login():
+    # yet to be completed
+    pass
 
 def _build_cors_prelight_response():
     response = jsonify()
