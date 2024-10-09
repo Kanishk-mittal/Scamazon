@@ -92,28 +92,26 @@ CREATE TABLE Seller_Review (
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
--- Triggers 
-DELIMITER //
-CREATE TRIGGER update_rating
-AFTER INSERT ON Product_Review
-FOR EACH ROW
-BEGIN
-    DECLARE avg_rating FLOAT;
-    SELECT AVG(rating) INTO avg_rating FROM Product_Review WHERE product_id = NEW.product_id;
-    UPDATE Product SET rating = avg_rating WHERE product_id = NEW.product_id;
-END;
-//
-
-CREATE TRIGGER update_seller_rating
-AFTER INSERT ON Seller_Review
-FOR EACH ROW
-BEGIN
-    DECLARE avg_rating FLOAT;
-    SELECT AVG(rating) INTO avg_rating FROM Seller_Review WHERE seller_id = NEW.seller_id;
-    UPDATE Seller SET rating = avg_rating WHERE seller_id = NEW.seller_id;
-END;
-//
-
-DELIMITER ;
-
-
+-- Triggers commenting trigers because they are causing errors with mysql connector so handeled separately in backend
+-- DELIMITER //
+-- CREATE TRIGGER update_rating
+-- AFTER INSERT ON Product_Review
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE avg_rating FLOAT;
+--     SELECT AVG(rating) INTO avg_rating FROM Product_Review WHERE product_id = NEW.product_id;
+--     UPDATE Product SET rating = avg_rating WHERE product_id = NEW.product_id;
+-- END;
+-- //
+-- 
+-- CREATE TRIGGER update_seller_rating
+-- AFTER INSERT ON Seller_Review
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE avg_rating FLOAT;
+--     SELECT AVG(rating) INTO avg_rating FROM Seller_Review WHERE seller_id = NEW.seller_id;
+--     UPDATE Seller SET rating = avg_rating WHERE seller_id = NEW.seller_id;
+-- END;
+-- //
+-- 
+-- DELIMITER ;
