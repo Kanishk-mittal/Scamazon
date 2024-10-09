@@ -101,7 +101,7 @@ function Login() {
                             </div>
                         </div>
                         <button type="submit" className="w-full text-[#FFFFFF] bg-[#f05a7e] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6">Login</button>
-                        <div className="text-sm  text-[#0b8494] text-center">Don't have an account yet? <a href="#" className="font-medium text-[#f05a7e] hover:underline">Sign Up</a></div>
+                        <div className="text-sm  text-[#0b8494] text-center">Don't have an account yet? <a href="/register" className="font-medium text-[#f05a7e] hover:underline">Sign Up</a></div>
                     </form>
                 </div>
             </div>

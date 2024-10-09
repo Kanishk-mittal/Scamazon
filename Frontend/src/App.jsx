@@ -3,6 +3,7 @@ import './App.css'
 import Login from './pages/Login'
 import SellerDashboard from './pages/SellerDashboard'
 import UserDashboard from './pages/UserDashboard'
+import Register from './pages/Register'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 function App() {
@@ -18,6 +19,10 @@ function App() {
     {
       path: '/user/:id',
       element: <UserDashboard />
+    },
+    {
+      path: '/register',
+      element: <Register />
     }
   ])
 
