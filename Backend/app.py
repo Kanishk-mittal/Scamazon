@@ -8,6 +8,9 @@ from seller import seller
 from user import user
 
 def _build_cors_prelight_response():
+    """
+    Builds a CORS preflight response
+    """
     response = jsonify()
     response.headers.add("Access-Control-Allow-Origin", "*")
     response.headers.add('Access-Control-Allow-Headers', "*")
@@ -21,6 +24,10 @@ load_dotenv()
 @app.route('/login', methods=['OPTIONS', 'POST'])
 @cross_origin()
 def login():
+    """
+    This function is used to verify the user credentials 
+    and return the user_id/seller_id if the credentials are correct
+    """
     sql_password = os.getenv('SQL_PASSWORD')
     conn = msc.connect(
         host="localhost",
@@ -60,9 +67,14 @@ def login():
     else:
         return jsonify({"verified": False, "message": "Invalid credentials"}), 200
     
+
 @app.route('/register', methods=['OPTIONS', 'POST'])
 @cross_origin()
-def login():
+def register():
+    """
+    This function is used to register a new user/seller
+    and return the user_id/seller_id
+    """
     sql_password = os.getenv('SQL_PASSWORD')
     conn = msc.connect(
         host="localhost",
@@ -115,6 +127,106 @@ def login():
         user_obj=user(user_id,username,email,password,contact,address)
         user_obj.to_sql()
         return jsonify({"user_id":user_id})
+    
+
+@app.route('/get_sellername', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def get_sellername():
+    """
+    This function is used to get the name of the seller
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    seller_id = data.get('seller_id')
+    cursor.execute(f'SELECT proprietor_name FROM Seller WHERE seller_id="{seller_id}"')
+    name = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if name:
+        return jsonify({"name": name[0]}), 200
+    else:
+        return jsonify({"message": "Invalid seller_id"}), 200
+
+@app.route('/seller/product', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def seller_products():
+    """
+    This function is used to get the products of a seller
+    It takes seller id as input and returns the products of the seller in json format
+    with following attributes
+    1. product_id
+    2. product_name
+    3. price
+    4. stock
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    seller_id = data.get('seller_id')
+    cursor.execute(f'SELECT product_id, Name, price, stock FROM Product WHERE seller_id="{seller_id}"')
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    products_list = []  
+    for product in products:
+        products_list.append({"p_id": product[0], "p_name": product[1], "price": product[2], "qty": product[3]})
+    return jsonify({"products": products_list}), 200
+
+@app.route('/seller/order', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def seller_orders():
+    """
+    This function is used to get the orders of a seller
+    It takes seller id as input and returns the orders of the seller in json format
+    with following attributes
+    1. order_id
+    2. product_id
+    3. quantity
+    4. p_price
+    5. order_date
+    6. product_name
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    seller_id = data.get('seller_id')
+    cursor.execute(f'SELECT o.order_id, o.product_id, o.quantity, o.p_price, o.order_date, p.Name FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.seller_id="{seller_id}"')
+    orders = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    orders_list = []
+    for order in orders:
+        orders_list.append({
+            "order_id": order[0],
+            "p_id": order[1], 
+            "qty": order[2], 
+            "p_price": order[3], 
+            "order_date": order[4], 
+            "p_name": order[5]})
+        
+    return jsonify({"orders": orders_list}), 200
 
 
 if __name__ == '__main__':
