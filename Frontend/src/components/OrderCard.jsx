@@ -1,18 +1,18 @@
 import React from 'react';
 
-function OrderCard() {
+function OrderCard({ orderId, productName, productPrice, quantity, orderDate }) {
     return (
         <>
             <div className="bg-white rounded-lg shadow-md p-4 mb-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                        <img src="/logo.png" alt="Product" className="w-16 h-16 object-contain mr-4" />
+                        <img src="/logo.png" alt={productName} className="w-16 h-16 object-contain mr-4" />
                         <div>
-                            <h2 className="text-lg font-semibold">Order ID: 12345</h2>
-                            <p className="text-gray-600">Product Name: Example Product</p>
-                            <p className="text-green-600">Product Price: $50</p>
-                            <p className="text-gray-600">Quantity: 2</p>
-                            <p className="text-gray-600">Order Date: 2024-10-10</p>
+                            <h2 className="text-lg font-semibold">Order ID: {orderId}</h2>
+                            <p className="text-gray-600">Product Name: {productName}</p>
+                            <p className="text-green-600">Product Price: ${productPrice}</p>
+                            <p className="text-gray-600">Quantity: {quantity}</p>
+                            <p className="text-gray-600">Order Date: {orderDate}</p>
                         </div>
                     </div>
                 </div>
