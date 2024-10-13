@@ -1,28 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, NavLink } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import OrderCard from '../components/OrderCard';
 
 const SellerDashboard = () => {
-    const SellerId = useParams().id;
-    // save the sellerID in localStorage
-    localStorage.setItem('sellerID', SellerId);
+    const { id: sellerId } = useParams();
+    const [sellerName, setSellerName] = useState('');
+    const [products, setProducts] = useState([]);
+    const [orders, setOrders] = useState([]);
 
-    // Example product data
-    const products = [
-        { name: "Speaker", quantity: 5, price: 50 },
-        { name: "Product 2", quantity: 3, price: 20 },
-        { name: "Prod", quantity: 3, price: 20 },
-        { name: "Prod", quantity: 3, price: 20 },
-        // Add more products as needed
-    ];
+    // Save the sellerID in localStorage
+    useEffect(() => {
+        localStorage.setItem('sellerID', sellerId);
+    }, [sellerId]);
 
-    // Example order data
-    const orders = [
-        { orderId: "12345", productName: "Example Product", productPrice: 50, quantity: 2, orderDate: "2024-10-10" },
-        { orderId: "12346", productName: "Another Product", productPrice: 30, quantity: 1, orderDate: "2024-10-11" },
-        // Add more orders as needed
-    ];
+    // Fetch seller name
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/get_sellername', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ seller_id: sellerId }),
+        })
+            .then(response => response.json())
+            .then(data => setSellerName(data.name || ''))
+            .catch(error => console.error('Error fetching seller name:', error));
+    }, [sellerId]);
+
+    // Fetch product details from the Flask backend
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/seller/product', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ seller_id: sellerId }),
+        })
+            .then(response => response.json())
+            .then(data => setProducts(data.products || []))
+            .catch(error => console.error('Error fetching product data:', error));
+    }, [sellerId]);
+
+    // Fetch order details from the Flask backend
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/seller/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ seller_id: sellerId }),
+        })
+            .then(response => response.json())
+            .then(data => setOrders(data.orders || []))
+            .catch(error => console.error('Error fetching order data:', error));
+    }, [sellerId]);
 
     return (
         <>
@@ -37,36 +69,42 @@ const SellerDashboard = () => {
                         <h1 className="text-xl font-bold">Scamazon Seller Dashboard</h1>
                     </div>
                     <div>
-                        Welcome, Username {/* Display the signed-in username */}
+                        Welcome, {sellerName || 'Seller'}
                     </div>
                 </div>
             </header>
             <div className="flex">
                 <div className="w-1/2 p-4 bg-gray-100">
-                    {/* Product-related content */}
-                    Products
-                    {products.map((product, index) => (
-                        <ProductCard
-                            key={index}
-                            name={product.name}
-                            quantity={product.quantity}
-                            price={product.price}
-                        />
-                    ))}
+                    <h2>Products</h2>
+                    {products.length > 0 ? (
+                        products.map((product, index) => (
+                            <ProductCard
+                                key={index}
+                                name={product.p_name}
+                                quantity={product.qty}
+                                price={product.price}
+                            />
+                        ))
+                    ) : (
+                        <p>No products available.</p>
+                    )}
                 </div>
                 <div className="w-1/2 p-4 bg-white">
-                    {/* Order-related content */}
-                    Orders
-                    {orders.map((order, index) => (
-                        <OrderCard
-                            key={index}
-                            orderId={order.orderId}
-                            productName={order.productName}
-                            productPrice={order.productPrice}
-                            quantity={order.quantity}
-                            orderDate={order.orderDate}
-                        />
-                    ))}
+                    <h2>Orders</h2>
+                    {orders.length > 0 ? (
+                        orders.map((order, index) => (
+                            <OrderCard
+                                key={index}
+                                orderId={order.order_id}
+                                productName={order.p_name}
+                                productPrice={order.p_price}
+                                quantity={order.qty}
+                                orderDate={order.order_date}
+                            />
+                        ))
+                    ) : (
+                        <p>No orders available.</p>
+                    )}
                 </div>
             </div>
         </>
