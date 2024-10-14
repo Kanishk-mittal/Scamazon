@@ -228,6 +228,53 @@ def seller_orders():
         
     return jsonify({"orders": orders_list}), 200
 
+@app.route('/user/products', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def user_products():
+    """
+    This function is used to get the products for a specific user.
+    It takes user_id as input and returns the products available in json format
+    with attributes:
+    1. product_id
+    2. product_name
+    3. price
+    4. stock
+    5. description
+    6. image_url (temporarily set to /logo.png)
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    
+    # Fetch all products
+    cursor.execute('SELECT product_id, Name, price, stock, description FROM Product')
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    products_list = []  
+    for product in products:
+        products_list.append({
+            "p_id": product[0], 
+            "name": product[1], 
+            "price": product[2], 
+            "qty": product[3], 
+            "description": product[4], 
+            "image_url": "/logo.png"  # Temporarily set to /logo.png
+        })
+    
+    return jsonify({"products": products_list}), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
