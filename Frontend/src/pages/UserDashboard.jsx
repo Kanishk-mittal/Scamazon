@@ -1,22 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductCarousel from '../components/ProductCarousel';
 
 const UserDashboard = () => {
-    const UserId = useParams().id;
+    const [products, setProducts] = useState([]);
+    const userId = useParams().id;
 
-    // Save the userID in localStorage
-    localStorage.setItem('userID', UserId);
+    useEffect(() => {
+        localStorage.setItem('userID', userId);
 
-    // Example product data
-    const products = [
-        { name: "Headphone", description: "Top notch noise cancelling", price: 50, image: "/logo.png" },
-        { name: "Speaker", description: "High quality sound", price: 75, image: "/logo.png" },
-        { name: "Laptop", description: "Powerful performance", price: 999, image: "/logo.png" },
-        { name: "Smartphone", description: "Latest features", price: 799, image: "/logo.png" },
-        { name: "Tablet", description: "Portable and convenient", price: 499, image: "/logo.png" },
-        // Add more products as needed
-    ];
+        // Fetch products from the backend
+        fetch('http://localhost:5000/user/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            setProducts(data.products);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+        });
+    }, [userId]);
 
     return (
         <>
