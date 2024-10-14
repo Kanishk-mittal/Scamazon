@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import UserProductCard from '../components/UserProductCard';
+import ProductCarousel from '../components/ProductCarousel';
 
 const UserDashboard = () => {
     const UserId = useParams().id;
+
     // Save the userID in localStorage
     localStorage.setItem('userID', UserId);
 
     // Example product data
     const products = [
-        { name: "Headphone", description: "Top notch noise cancelling", price: 50 },
-        { name: "Speaker", description: "High quality sound", price: 75 },
-        { name: "Laptop", description: "Powerful performance", price: 999 },
-        { name: "Smartphone", description: "Latest features", price: 799 },
-        { name: "Tablet", description: "Portable and convenient", price: 499 },
+        { name: "Headphone", description: "Top notch noise cancelling", price: 50, image: "/logo.png" },
+        { name: "Speaker", description: "High quality sound", price: 75, image: "/logo.png" },
+        { name: "Laptop", description: "Powerful performance", price: 999, image: "/logo.png" },
+        { name: "Smartphone", description: "Latest features", price: 799, image: "/logo.png" },
+        { name: "Tablet", description: "Portable and convenient", price: 499, image: "/logo.png" },
+        // Add more products as needed
     ];
 
     return (
@@ -35,16 +37,7 @@ const UserDashboard = () => {
             </header>
             <div className="p-4 bg-gray-100">
                 <h2>Products</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {products.map((product, index) => (
-                        <UserProductCard
-                            key={index}
-                            name={product.name}
-                            description={product.description}
-                            price={product.price}
-                        />
-                    ))}
-                </div>
+                <ProductCarousel products={products} />
             </div>
         </>
     );
