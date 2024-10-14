@@ -212,7 +212,7 @@ def seller_orders():
     cursor.execute("USE scamazon")
     data = request.get_json()
     seller_id = data.get('seller_id')
-    cursor.execute(f'SELECT o.order_id, o.product_id, o.quantity, o.p_price, o.order_date, p.Name FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.seller_id="{seller_id}"')
+    cursor.execute(f'SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, p.Name FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.seller_id="{seller_id}"')
     orders = cursor.fetchall()
     cursor.close()
     conn.close()
