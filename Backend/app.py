@@ -269,7 +269,7 @@ def user_products():
             "price": product[2], 
             "qty": product[3], 
             "description": product[4], 
-            "image_url": "/logo.png"  # Temporarily set to /logo.png
+            "image": f"/{product[0]}.png"  # Temporarily set to /logo.png
         })
     
     return jsonify({"products": products_list}), 200
