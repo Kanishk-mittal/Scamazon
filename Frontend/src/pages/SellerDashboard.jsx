@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, NavLink } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import OrderCard from '../components/OrderCard';
 import Logout from '../components/Logout';
@@ -15,46 +16,37 @@ const SellerDashboard = () => {
         localStorage.setItem('sellerID', sellerId);
     }, [sellerId]);
 
-    // Fetch seller name
+    // Fetch seller name using axios
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/get_sellername', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ seller_id: sellerId }),
-        })
-            .then(response => response.json())
-            .then(data => setSellerName(data.name || ''))
-            .catch(error => console.error('Error fetching seller name:', error));
+        axios.post('http://127.0.0.1:5000/get_sellername', { seller_id: sellerId })
+            .then(response => {
+                setSellerName(response.data.name || '');
+            })
+            .catch(error => {
+                console.error('Error fetching seller name:', error);
+            });
     }, [sellerId]);
 
-    // Fetch product details from the Flask backend
+    // Fetch product details using axios
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/seller/product', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ seller_id: sellerId }),
-        })
-            .then(response => response.json())
-            .then(data => setProducts(data.products || []))
-            .catch(error => console.error('Error fetching product data:', error));
+        axios.post('http://127.0.0.1:5000/seller/product', { seller_id: sellerId })
+            .then(response => {
+                setProducts(response.data.products || []);
+            })
+            .catch(error => {
+                console.error('Error fetching product data:', error);
+            });
     }, [sellerId]);
 
-    // Fetch order details from the Flask backend
+    // Fetch order details using axios
     useEffect(() => {
-        fetch('http://127.0.0.1:5000/seller/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ seller_id: sellerId }),
-        })
-            .then(response => response.json())
-            .then(data => setOrders(data.orders || []))
-            .catch(error => console.error('Error fetching order data:', error));
+        axios.post('http://127.0.0.1:5000/seller/order', { seller_id: sellerId })
+            .then(response => {
+                setOrders(response.data.orders || []);
+            })
+            .catch(error => {
+                console.error('Error fetching order data:', error);
+            });
     }, [sellerId]);
 
     return (
@@ -75,7 +67,6 @@ const SellerDashboard = () => {
                         </div>
                         <Logout />
                     </div>
-                    
                 </div>
             </header>
             <div className="flex">

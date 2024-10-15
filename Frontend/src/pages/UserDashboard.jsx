@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import ProductCarousel from '../components/ProductCarousel';
 import Logout from '../components/Logout';
 
@@ -11,30 +12,20 @@ const UserDashboard = () => {
     useEffect(() => {
         localStorage.setItem('userID', userId);
 
-        // fetch user name
-        fetch('http://localhost:5000/get_username', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user_id: userId }),
-        })
-            .then(response => response.json())
-            .then(data => setSellerName(data.name || ''))
-            .catch(error => console.error('Error fetching user name:', error));
+        // Fetch user name using axios
+        axios.post('http://localhost:5000/get_username', { user_id: userId })
+            .then(response => {
+                setSellerName(response.data.name || '');
+            })
+            .catch(error => {
+                console.error('Error fetching user name:', error);
+            });
 
-        // Fetch products from the backend
-        fetch('http://localhost:5000/user/products', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user_id: userId }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                // classifying the products into categories
-                const products = data.products || [];
+        // Fetch products from the backend using axios
+        axios.post('http://localhost:5000/user/products', { user_id: userId })
+            .then(response => {
+                const products = response.data.products || [];
+                // Classifying the products into categories
                 const categories = {};
                 products.forEach(product => {
                     if (!categories[product.category]) {
@@ -71,7 +62,7 @@ const UserDashboard = () => {
             </header>
             <div className="p-4 bg-gray-100">
                 <h2>Products</h2>
-                {/* for each cateogry have a seperate carousel */}
+                {/* For each category, display a separate carousel */}
                 {Object.keys(products).map((category, index) => (
                     <div key={index} className="my-4">
                         <h3 className="text-xl font-bold">{category}</h3>
