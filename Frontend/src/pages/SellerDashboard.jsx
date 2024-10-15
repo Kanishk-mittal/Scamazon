@@ -19,34 +19,22 @@ const SellerDashboard = () => {
     // Fetch seller name using axios
     useEffect(() => {
         axios.post('http://127.0.0.1:5000/get_sellername', { seller_id: sellerId })
-            .then(response => {
-                setSellerName(response.data.name || '');
-            })
-            .catch(error => {
-                console.error('Error fetching seller name:', error);
-            });
+            .then(response => setSellerName(response.data.name || ''))
+            .catch(error => console.error('Error fetching seller name:', error));
     }, [sellerId]);
 
     // Fetch product details using axios
     useEffect(() => {
         axios.post('http://127.0.0.1:5000/seller/product', { seller_id: sellerId })
-            .then(response => {
-                setProducts(response.data.products || []);
-            })
-            .catch(error => {
-                console.error('Error fetching product data:', error);
-            });
+            .then(response => setProducts(response.data.products || []))
+            .catch(error => console.error('Error fetching product data:', error));
     }, [sellerId]);
 
     // Fetch order details using axios
     useEffect(() => {
         axios.post('http://127.0.0.1:5000/seller/order', { seller_id: sellerId })
-            .then(response => {
-                setOrders(response.data.orders || []);
-            })
-            .catch(error => {
-                console.error('Error fetching order data:', error);
-            });
+            .then(response => setOrders(response.data.orders || []))
+            .catch(error => console.error('Error fetching order data:', error));
     }, [sellerId]);
 
     return (
