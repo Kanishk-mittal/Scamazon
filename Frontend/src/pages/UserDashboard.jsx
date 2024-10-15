@@ -14,12 +14,8 @@ const UserDashboard = () => {
 
         // Fetch user name using axios
         axios.post('http://localhost:5000/get_username', { user_id: userId })
-            .then(response => {
-                setSellerName(response.data.name || '');
-            })
-            .catch(error => {
-                console.error('Error fetching user name:', error);
-            });
+            .then(response => setSellerName(response.data.name || ''))
+            .catch(error => console.error('Error fetching user name:', error));
 
         // Fetch products from the backend using axios
         axios.post('http://localhost:5000/user/products', { user_id: userId })
