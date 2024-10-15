@@ -5,7 +5,7 @@ import ProductCarousel from '../components/ProductCarousel';
 import Logout from '../components/Logout';
 
 const UserDashboard = () => {
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState({});
     const [sellerName, setSellerName] = useState('');
     const userId = useParams().id;
 
@@ -48,7 +48,7 @@ const UserDashboard = () => {
                         />
                         <h1 className="text-xl font-bold">Scamazon User Dashboard</h1>
                     </div>
-                    <div className='flex justify-center items-center gap-5'>
+                    <div className="flex justify-center items-center gap-5">
                         <div>
                             Welcome, {sellerName || 'Seller'}
                         </div>
@@ -58,7 +58,6 @@ const UserDashboard = () => {
             </header>
             <div className="p-4 bg-gray-100">
                 <h2>Products</h2>
-                {/* For each category, display a separate carousel */}
                 {Object.keys(products).map((category, index) => (
                     <div key={index} className="my-4">
                         <h3 className="text-xl font-bold">{category}</h3>
