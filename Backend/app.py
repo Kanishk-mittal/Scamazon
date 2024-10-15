@@ -300,6 +300,94 @@ def get_username():
         return jsonify({"name": name[0]}), 200
     else:
         return jsonify({"message": "Invalid seller_id"}), 200
+    
+@app.route('/cart/add', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def cart_add():
+    """
+    This function is used to add a product to the cart
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    product_id = data.get('product_id')
+    # get current value and increment by 1
+    cursor.execute(f'SELECT quantity FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
+    qty = cursor.fetchone()
+    if qty:
+        cursor.execute(f'UPDATE Cart SET quantity={qty[0]+1} WHERE user_id="{user_id}" AND product_id="{product_id}"')
+    else:
+        cursor.execute(f'INSERT INTO Cart VALUES("{user_id}", "{product_id}", 1)')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Product added to cart"}), 200
+
+@app.route('/cart/remove', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def cart_remove():
+    """
+    This function is used to remove a product from the cart
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    product_id = data.get('product_id')
+    # get current value and decrement by 1
+    cursor.execute(f'SELECT quantity FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
+    qty = cursor.fetchone()
+    if qty:
+        if qty[0] > 1:
+            cursor.execute(f'UPDATE Cart SET quantity={qty[0]-1} WHERE user_id="{user_id}" AND product_id="{product_id}"')
+        else:
+            cursor.execute(f'DELETE FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Product removed from cart"}), 200
+
+@app.route('/cart', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def cart():
+    """
+    This function is used to get the cart of a user
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    cursor.execute(f'SELECT c.product_id, p.Name, p.price, c.quantity FROM Cart c JOIN Product p ON c.product_id=p.product_id WHERE c.user_id="{user_id}"')
+    cart = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    cart_list = []
+    for item in cart:
+        cart_list.append({"p_id": item[0], "p_name": item[1], "price": item[2], "qty": item[3]})
+    return jsonify({"cart": cart_list}), 200
+
 
 
 if __name__ == '__main__':
