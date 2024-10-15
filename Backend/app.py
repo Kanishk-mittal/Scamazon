@@ -253,7 +253,6 @@ def user_products():
     cursor = conn.cursor()
     cursor.execute("USE scamazon")
     data = request.get_json()
-    user_id = data.get('user_id')
     
     # Fetch all products
     cursor.execute('SELECT product_id, Name, price, stock, description,category FROM Product')
@@ -316,7 +315,9 @@ def cart_add():
         passwd=sql_password)
     cursor = conn.cursor()
     cursor.execute("USE scamazon")
-    data = request.get_json()
+    data = request.get_json().get('body')
+    # data is a string, convert it to dictionary
+    data = eval(data)
     user_id = data.get('user_id')
     product_id = data.get('product_id')
     # get current value and increment by 1

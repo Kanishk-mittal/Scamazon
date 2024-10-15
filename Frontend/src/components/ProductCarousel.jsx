@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import UserProductCard from './UserProductCard';
 
-const ProductCarousel = ({ products }) => {
+const ProductCarousel = ({ products,userId }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const itemsPerPage = 4; // Number of products to show per page
     const totalPages = Math.ceil(products.length / itemsPerPage); // Calculate total number of pages
@@ -38,6 +38,8 @@ const ProductCarousel = ({ products }) => {
                             description={product.description}
                             price={product.price}
                             image={product.image}
+                            userId={userId}
+                            productId={product.p_id}
                         />
                     </div>
                 ))}

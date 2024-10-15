@@ -61,7 +61,7 @@ const UserDashboard = () => {
                 {Object.keys(products).map((category, index) => (
                     <div key={index} className="my-4">
                         <h3 className="text-xl font-bold">{category}</h3>
-                        <ProductCarousel products={products[category]} />
+                        <ProductCarousel products={products[category]} userId={userId} />
                     </div>
                 ))}
             </div>
