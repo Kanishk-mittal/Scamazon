@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, NavLink } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import OrderCard from '../components/OrderCard';
+import Logout from '../components/Logout';
 
 const SellerDashboard = () => {
     const { id: sellerId } = useParams();
@@ -68,9 +69,13 @@ const SellerDashboard = () => {
                         />
                         <h1 className="text-xl font-bold">Scamazon Seller Dashboard</h1>
                     </div>
-                    <div>
-                        Welcome, {sellerName || 'Seller'}
+                    <div className='flex justify-center items-center gap-5'>
+                        <div>
+                            Welcome, {sellerName || 'Seller'}
+                        </div>
+                        <Logout />
                     </div>
+                    
                 </div>
             </header>
             <div className="flex">

@@ -240,7 +240,7 @@ def user_products():
     3. price
     4. stock
     5. description
-    6. image_url (temporarily set to /logo.png)
+    6. image_url
     """
     if request.method == 'OPTIONS':
         return _build_cors_prelight_response()
@@ -256,7 +256,7 @@ def user_products():
     user_id = data.get('user_id')
     
     # Fetch all products
-    cursor.execute('SELECT product_id, Name, price, stock, description FROM Product')
+    cursor.execute('SELECT product_id, Name, price, stock, description,category FROM Product')
     products = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -269,11 +269,37 @@ def user_products():
             "price": product[2], 
             "qty": product[3], 
             "description": product[4], 
-            "image": f"/{product[0]}.png"  # Temporarily set to /logo.png
+            "image": f"/{product[0]}.png" ,
+            "category" : product[5]
         })
     
     return jsonify({"products": products_list}), 200
 
+@app.route('/get_username', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def get_username():
+    """
+    This function is used to get the name of the seller
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    cursor.execute(f'SELECT username FROM User WHERE user_id="{user_id}"')
+    name = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if name:
+        return jsonify({"name": name[0]}), 200
+    else:
+        return jsonify({"message": "Invalid seller_id"}), 200
 
 
 if __name__ == '__main__':

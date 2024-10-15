@@ -102,9 +102,9 @@ function Register() {
                         {role && (
                             <>
                                 <div className="pb-2">
-                                    <label htmlFor="p_name" className="block mb-2 text-sm font-medium text-[#000000]">Product Name</label>
+                                    <label htmlFor="p_name" className="block mb-2 text-sm font-medium text-[#000000]">Proprietor Name</label>
                                     <div className="relative text-gray-400">
-                                        <input type="text" name="p_name" id="p_name" className="pl-5 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" placeholder="Product Name" autoComplete="off" value={p_name} onChange={(e) => setP_name(e.target.value)} />
+                                        <input type="text" name="p_name" id="p_name" className="pl-5 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" placeholder="Proprietor Name" autoComplete="off" value={p_name} onChange={(e) => setP_name(e.target.value)} />
                                     </div>
                                 </div>
                                 <div className="pb-2">
