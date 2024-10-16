@@ -67,6 +67,7 @@ const SellerDashboard = () => {
                                 name={product.p_name}
                                 quantity={product.qty}
                                 price={product.price}
+                                p_id={product.p_id}
                             />
                         ))
                     ) : (
@@ -84,6 +85,8 @@ const SellerDashboard = () => {
                                 productPrice={order.p_price}
                                 quantity={order.qty}
                                 orderDate={order.order_date}
+                                p_id={order.p_id}
+                                status={order.status}
                             />
                         ))
                     ) : (

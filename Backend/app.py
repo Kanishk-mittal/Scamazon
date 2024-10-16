@@ -212,7 +212,7 @@ def seller_orders():
     cursor.execute("USE scamazon")
     data = request.get_json()
     seller_id = data.get('seller_id')
-    cursor.execute(f'SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, p.Name FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE p.seller_id="{seller_id}"')
+    cursor.execute(f'SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, p.Name, o.status FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE p.seller_id="{seller_id}"')
     orders = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -224,6 +224,7 @@ def seller_orders():
             "qty": order[2], 
             "p_price": order[3], 
             "order_date": order[4], 
+            "status": order[6],
             "p_name": order[5]})
         
     return jsonify({"orders": orders_list}), 200
@@ -388,6 +389,31 @@ def cart():
     for item in cart:
         cart_list.append({"p_id": item[0], "p_name": item[1], "price": item[2], "qty": item[3]})
     return jsonify({"cart": cart_list}), 200
+
+@app.route('/updateStock', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def update_stock():
+    """
+    This function is used to update the stock of a product
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    print(data)
+    product_id = data.get('p_id')
+    stock = data.get('quantity')
+    cursor.execute(f'UPDATE Product SET stock=stock+{stock} WHERE product_id="{product_id}"')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Stock updated"}), 200
 
 
 
