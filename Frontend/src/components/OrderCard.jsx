@@ -1,6 +1,14 @@
 import React from 'react';
+import axios from 'axios';
 
 function OrderCard({ orderId, productName, productPrice, quantity, orderDate, p_id, status }) {
+    const dispatch = () => {
+        const response = axios.post('http://localhost:5000/dispatch', { "order_id": orderId })
+        response.then((res) => {
+            alert(res.data.message)
+            window.location.reload()
+        })
+    };
     return (
         <>
             <div className="bg-white rounded-lg shadow-md p-4 mb-4">
@@ -17,7 +25,7 @@ function OrderCard({ orderId, productName, productPrice, quantity, orderDate, p_
                         </div>
                     </div>
                     {status == 'Processing' && <button
-                        onClick={() => console.log(`Dispatching order ${orderId}`)}
+                        onClick={dispatch}
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
                         Dispatch

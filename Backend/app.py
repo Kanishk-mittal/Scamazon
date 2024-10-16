@@ -415,6 +415,31 @@ def update_stock():
     conn.close()
     return jsonify({"message": "Stock updated"}), 200
 
+@app.route('/dispatch', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def dispatch():
+    """
+    This function is used to update the stock of a product
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    print(data)
+    order_id = data.get('order_id')
+    cursor.execute(f'UPDATE Orders SET status="Shipped" WHERE order_id="{order_id}"')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Order dispatched"}), 200
+
+
 
 
 if __name__ == '__main__':

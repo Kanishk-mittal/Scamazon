@@ -9,7 +9,6 @@ function ProductCard({ name, quantity, price, p_id }) {
         const response = axios.post('http://localhost:5000/updateStock', { "p_id": p_id, "quantity": stockUp })
         response.then((res) => {
             alert(res.data.message)
-            setstockUp(0)
             //refresh the page
             window.location.reload()
         })
@@ -26,7 +25,7 @@ function ProductCard({ name, quantity, price, p_id }) {
                             <p className="text-green-600">Selling price: ${price}</p>
                         </div>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center bg-gray-200 p-2 rounded-md">
                         <input
                             type="number"
                             value={stockUp} // You can bind this to your state

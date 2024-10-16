@@ -57,9 +57,9 @@ const SellerDashboard = () => {
                     </div>
                 </div>
             </header>
-            <div className="flex">
-                <div className="w-1/2 p-4 bg-gray-100">
-                    <h2>Products</h2>
+            <div className="flex flex-col md:flex-row">
+                <div className="w-full md:w-1/2 p-4 bg-gray-100">
+                    <h2 className="text-lg font-semibold mb-4">Products</h2>
                     {products.length > 0 ? (
                         products.map((product, index) => (
                             <ProductCard
@@ -74,21 +74,67 @@ const SellerDashboard = () => {
                         <p>No products available.</p>
                     )}
                 </div>
-                <div className="w-1/2 p-4 bg-white">
-                    <h2>Orders</h2>
+                <div className="w-full md:w-1/2 p-4 bg-white">
+                    <h2 className="text-lg font-semibold mb-4">Orders</h2>
                     {orders.length > 0 ? (
-                        orders.map((order, index) => (
-                            <OrderCard
-                                key={index}
-                                orderId={order.order_id}
-                                productName={order.p_name}
-                                productPrice={order.p_price}
-                                quantity={order.qty}
-                                orderDate={order.order_date}
-                                p_id={order.p_id}
-                                status={order.status}
-                            />
-                        ))
+                        <>
+                            <h3 className="text-md font-medium mb-2">Processing</h3>
+                            <hr />
+                            {orders.filter(order => order.status === 'Processing').length > 0 ? (
+                                orders.filter(order => order.status === 'Processing').map((order, index) => (
+                                    <OrderCard
+                                        key={index}
+                                        orderId={order.order_id}
+                                        productName={order.p_name}
+                                        productPrice={order.p_price}
+                                        quantity={order.qty}
+                                        orderDate={order.order_date}
+                                        p_id={order.p_id}
+                                        status={order.status}
+                                    />
+                                ))
+                            ) : (
+                                <p className='py-5'>Nothing to display here.</p>
+                            )}
+
+                            <h3 className="text-md font-medium mb-2">Shipped</h3>
+                            <hr />
+                            {orders.filter(order => order.status === 'Shipped').length > 0 ? (
+                                orders.filter(order => order.status === 'Shipped').map((order, index) => (
+                                    <OrderCard
+                                        key={index}
+                                        orderId={order.order_id}
+                                        productName={order.p_name}
+                                        productPrice={order.p_price}
+                                        quantity={order.qty}
+                                        orderDate={order.order_date}
+                                        p_id={order.p_id}
+                                        status={order.status}
+                                    />
+                                ))
+                            ) : (
+                                <p className='py-5'>Nothing to display here.</p>
+                            )}
+
+                            <h3 className="text-md font-medium mb-2">Delivered</h3>
+                            <hr />
+                            {orders.filter(order => order.status === 'Delivered').length > 0 ? (
+                                orders.filter(order => order.status === 'Delivered').map((order, index) => (
+                                    <OrderCard
+                                        key={index}
+                                        orderId={order.order_id}
+                                        productName={order.p_name}
+                                        productPrice={order.p_price}
+                                        quantity={order.qty}
+                                        orderDate={order.order_date}
+                                        p_id={order.p_id}
+                                        status={order.status}
+                                    />
+                                ))
+                            ) : (
+                                <p className='py-5'>Nothing to display here.</p>
+                            )}
+                        </>
                     ) : (
                         <p>No orders available.</p>
                     )}
