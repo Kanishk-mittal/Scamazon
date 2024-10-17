@@ -5,6 +5,7 @@ import SellerDashboard from './pages/SellerDashboard'
 import UserDashboard from './pages/UserDashboard'
 import Register from './pages/Register'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import AddProduct from './pages/AddProduct'
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,10 @@ function App() {
     {
       path: '/register',
       element: <Register />
+    },
+    {
+      path: '/addProduct',
+      element: <AddProduct />
     }
   ])
 

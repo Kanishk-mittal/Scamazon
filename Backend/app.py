@@ -6,6 +6,7 @@ import mysql.connector as msc
 from database_creator import create_database, add_data, check_database_exists
 from seller import seller
 from user import user
+from product import Product
 
 def _build_cors_prelight_response():
     """
@@ -438,6 +439,68 @@ def dispatch():
     cursor.close()
     conn.close()
     return jsonify({"message": "Order dispatched"}), 200
+
+
+def get_next_product_id():
+    load_dotenv()
+    con = msc.connect(host='localhost', user='root', password=os.getenv('sql_password'), database='Scamazon')
+    cur = con.cursor()
+    cur.execute("SELECT product_id FROM Product ORDER BY product_id DESC LIMIT 1")
+    last_id = cur.fetchone()
+    cur.close()
+    con.close()
+    if last_id:
+        last_id_num = int(last_id[0][1:])
+        next_id_num = last_id_num + 1
+        next_id = f'P{next_id_num:03}'
+    else:
+        next_id = 'P001'
+    return next_id
+
+@app.route('/add_product', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def add_product():
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    seller_id = request.form.get('seller_id')
+    name = request.form.get('name')
+    category = request.form.get('category')
+    description = request.form.get('description')
+    price = request.form.get('price')
+    stock = request.form.get('stock')
+    warranty = request.form.get('warranty')
+    offer = request.form.get('offer')
+    rating = 5 
+
+    product_id = get_next_product_id()
+    if not product_id:
+        return jsonify({'message': 'Error generating product ID'})
+
+    new_product = Product(
+        product_id=product_id,
+        name=name,
+        category=category,
+        description=description,
+        price=price,
+        stock=stock,
+        rating=rating,
+        seller_id=seller_id,
+        warranty=warranty,
+        offer=offer
+    )
+    try:
+        new_product.to_sql()
+        response = {'message': 'Product added successfully'}
+    except Exception as e:
+        response = {'message': f'Error adding product: {str(e)}'}
+
+    # Save the image
+    file = request.files['file']
+    if file:
+        # SAVE IN Frontend\public
+        file.save(f'../Frontend/public/{product_id}.png')
+
+    return jsonify(response)
 
 
 

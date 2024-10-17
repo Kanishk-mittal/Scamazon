@@ -73,6 +73,9 @@ const SellerDashboard = () => {
                     ) : (
                         <p>No products available.</p>
                     )}
+                    <div className="mt-9 w-full flex justify-center items-center">
+                        <button onClick={() => window.location.href = '/addProduct'} className="bg-blue-500 text-white px-4 py-2 rounded">Add product + </button>
+                    </div>
                 </div>
                 <div className="w-full md:w-1/2 p-4 bg-white">
                     <h2 className="text-lg font-semibold mb-4">Orders</h2>
