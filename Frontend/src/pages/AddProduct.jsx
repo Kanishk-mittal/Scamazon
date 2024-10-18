@@ -36,7 +36,6 @@ const AddProduct = () => {
         const price = e.target.price.value;
         const stock = e.target.stock.value;
         const warranty = e.target.warranty.value;
-        const offer = e.target.offer.value;
 
         const formData = new FormData();
         formData.append('seller_id', sellerId);
@@ -46,7 +45,6 @@ const AddProduct = () => {
         formData.append('price', price);
         formData.append('stock', stock);
         formData.append('warranty', warranty);
-        formData.append('offer', offer);
         formData.append('file', file);
 
         axios.post('http://localhost:5000/add_product', formData, {
@@ -122,12 +120,6 @@ const AddProduct = () => {
                         Warranty
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="warranty" type="text" placeholder="Warranty" required />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="offer">
-                        Offer
-                    </label>
-                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="offer" type="text" placeholder="Offer" required />
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="upload">

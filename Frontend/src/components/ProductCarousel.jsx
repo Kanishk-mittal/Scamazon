@@ -40,6 +40,7 @@ const ProductCarousel = ({ products,userId }) => {
                             image={product.image}
                             userId={userId}
                             productId={product.p_id}
+                            rating={product.rating}
                         />
                     </div>
                 ))}

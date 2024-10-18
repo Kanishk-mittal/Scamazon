@@ -39,16 +39,20 @@ const Cart = () => {
             });
     };
 
-    const BuyNow = (itemId) => {
-        // logic to place order
-        axios.post('http://localhost:5000/cart/buy', { itemId })
+    const Checkout = (items) => {
+        console.log(items);
+        // send the user id and an array having itemid and quantity
+        axios.post('http://localhost:5000/checkout', {
+            "user_id": userId,
+            "items": items
+        })
             .then(() => {
                 // reload the page
                 window.location.reload();
-                alert('Item bought successfully');
+                alert('Checkout successful');
             })
             .catch(error => {
-                console.error('Error buying item:', error);
+                console.error('Error checking out:', error);
             });
     }
 
@@ -83,7 +87,7 @@ const Cart = () => {
                                 Remove all
                             </button>
                             <button
-                                onClick={() => BuyNow(item.p_id)}
+                                onClick={() => Checkout([{ "product_id": item.p_id, "quantity":item.qty }])}
                                 className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
                             >
                                 Buy now
@@ -93,7 +97,12 @@ const Cart = () => {
                 ))
             )}
             <div className="mt-8 text-center">
-                <button className="bg-orange-600 text-white px-6 py-3 rounded hover:bg-orange-700">
+                <button onClick={() => {
+                    const items = cartItems.map(item => {
+                        return { "product_id": item.p_id, "quantity": item.qty }
+                    });
+                    Checkout(items);
+                }} className="bg-orange-600 text-white px-6 py-3 rounded hover:bg-orange-700">
                     Checkout
                 </button>
             </div>

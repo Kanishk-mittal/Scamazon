@@ -256,7 +256,7 @@ def user_products():
     data = request.get_json()
     
     # Fetch all products
-    cursor.execute('SELECT product_id, Name, price, stock, description,category FROM Product')
+    cursor.execute('SELECT product_id, Name, price, stock, description,category,rating FROM Product')
     products = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -269,7 +269,8 @@ def user_products():
             "price": product[2], 
             "qty": product[3], 
             "description": product[4], 
-            "image": f"/{product[0]}.png" ,
+            "image": f"/{product[0]}.png",
+            "rating": product[6],
             "category" : product[5]
         })
     
@@ -484,7 +485,6 @@ def add_product():
         rating=rating,
         seller_id=seller_id,
         warranty=warranty,
-        offer=offer
     )
     try:
         new_product.to_sql()
@@ -528,7 +528,7 @@ def user_orders():
     data = request.get_json()
     user_id = data.get('user_id')
     
-    cursor.execute(f' SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.user_id="{user_id}"')
+    cursor.execute(f' SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status,p.Name FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.user_id="{user_id}"')
     orders = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -546,6 +546,125 @@ def user_orders():
         })
         
     return jsonify({"orders": orders_list}), 200
+
+def get_next_order_id():
+    load_dotenv()
+    con = msc.connect(host='localhost', user='root', password=os.getenv('sql_password'), database='Scamazon')
+    cur = con.cursor()
+    cur.execute("SELECT order_id FROM Orders ORDER BY order_id DESC LIMIT 1")
+    last_id = cur.fetchone()
+    cur.close()
+    con.close()
+    if last_id:
+        last_id_num = int(last_id[0][1:])
+        next_id_num = last_id_num + 1
+        next_id = f'O{next_id_num:03}'
+    else:
+        next_id = 'O001'
+    return next_id
+
+@app.route('/checkout', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def checkout():
+    """
+    This function is used to checkout the cart of a user
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    items = data.get('items') # List of product_id quantity we have to get from cart table
+
+    # array to store name of products for which stock is insufficient
+    failed=[]
+    
+    for item in items:
+        product_id = item.get('product_id')
+        quantity = item.get('quantity')
+        cursor.execute(f'SELECT stock FROM Product WHERE product_id="{product_id}"')
+        stock = cursor.fetchone()[0]
+        if stock < quantity:
+            cursor.execute(f'SELECT Name FROM Product WHERE product_id="{product_id}"')
+            product_name = cursor.fetchone()[0]
+            failed.append(product_name)
+        cursor.execute(f'UPDATE Product SET stock=stock-{quantity} WHERE product_id="{product_id}"')
+        next_order_id = get_next_order_id()
+        cursor.execute(f'INSERT INTO Orders (order_id,user_id, product_id, quantity, order_date, status) VALUES("{next_order_id}","{user_id}", "{product_id}", {quantity}, CURDATE(), "Processing")')
+        cursor.execute(f'DELETE FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
+        conn.commit()
+    
+    conn.commit()
+    print(cursor._executed_list)
+    cursor.close()
+    conn.close()
+    
+    if failed:
+        return jsonify({"message": f"Insufficient stock for {', '.join(failed)}"}), 200
+    else:
+        return jsonify({"message": "Order placed successfully"}), 200
+    
+@app.route('/review', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def review():
+    """
+    This function is used to review a product
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    user_id = data.get('user_id')
+    product_id = data.get('product_id')
+    order_id=data.get('order_id')
+    product_rating = data.get('product_rating')
+    product_review = data.get('product_review')
+    selelr_rating = data.get('seller_rating')
+    seller_review = data.get('seller_review')
+    cursor.execute(f'INSERT INTO Product_Review (user_id, product_id,order_id, rating, review) VALUES("{user_id}", "{product_id}", "{order_id}", {product_rating}, "{product_review}")')
+    cursor.execute(f'INSERT INTO Seller_Review (user_id, seller_id,order_id, rating, review) VALUES("{user_id}", (SELECT seller_id FROM Product WHERE product_id="{product_id}"),"{order_id}", {selelr_rating}, "{seller_review}")')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Review added successfully"}), 200
+
+@app.route('/receive', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def receive():
+    """
+    This function is used to update the status of an order to received
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    data = request.get_json()
+    order_id = data.get('order_id')
+    cursor.execute(f'UPDATE Orders SET status="Delivered" WHERE order_id="{order_id}"')
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Order received"}), 200
 
 
 

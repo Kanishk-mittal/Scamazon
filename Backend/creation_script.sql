@@ -27,7 +27,6 @@ CREATE TABLE Product (
     rating FLOAT,
     seller_id VARCHAR(6) NOT NULL,
     warranty FLOAT,
-    offer FLOAT,
     FOREIGN KEY (seller_id) REFERENCES Seller(seller_id)
 );
 
@@ -68,16 +67,6 @@ CREATE TABLE Product_Review (
     review VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
-);
-
-CREATE TABLE Transaction (
-    transaction_id VARCHAR(6) NOT NULL PRIMARY KEY,
-    user_id VARCHAR(6) NOT NULL,
-    order_id VARCHAR(6) NOT NULL,
-    amount FLOAT NOT NULL,
-    payment_date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (order_id) REFERENCES Orders(order_id)
 );
 
