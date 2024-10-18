@@ -1,7 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import ReviewModal from './ReviewModal'; // Import the ReviewModal component
 
 function UserOrderCard({ orderId, productName, productPrice, quantity, orderDate, p_id, status }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleReviewSubmit = (reviewData) => {
+        console.log("Submitted Review Data:", reviewData);
+        // Here you can send the review data to your API
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
             <div className="flex items-center justify-between">
@@ -17,13 +24,19 @@ function UserOrderCard({ orderId, productName, productPrice, quantity, orderDate
                     </div>
                 </div>
                 {status === 'Delivered' && (
-                    <Link to={`/review/${orderId}`} className="ml-4">
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Review
-                        </button>
-                    </Link>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Review
+                    </button>
                 )}
             </div>
+            <ReviewModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onSubmit={handleReviewSubmit} 
+            />
         </div>
     );
 }
