@@ -47,18 +47,17 @@ def login():
     username = data.get('username')
     password = data.get('password')
     role = data.get('role')
-    print(f"username: {username}, password: {password}, role: {role}")
     # checking if the user exists in the database
     if role=="seller":
         # it is a seller
         cursor.execute(f'SELECT seller_id FROM Seller WHERE username="{username}" AND password="{password}"')
-        print("Query executed:- ")
-        print(f'SELECT seller_id FROM Seller WHERE username="{username}" AND password="{password}"')
+
+
     else:
         # it is a user
         cursor.execute(f'SELECT user_id FROM User WHERE username="{username}" AND password="{password}"')
-        print("Query executed:- ")
-        print(f'SELECT user_id FROM User WHERE username="{username}" AND password="{password}"')
+
+
     user = cursor.fetchone()
     # closing connection
     cursor.close()
@@ -352,11 +351,12 @@ def cart_remove():
     data = request.get_json()
     user_id = data.get('user_id')
     product_id = data.get('product_id')
+    remove_all = data.get('remove_all')
     # get current value and decrement by 1
     cursor.execute(f'SELECT quantity FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
     qty = cursor.fetchone()
     if qty:
-        if qty[0] > 1:
+        if qty[0] > 1 and not remove_all:
             cursor.execute(f'UPDATE Cart SET quantity={qty[0]-1} WHERE user_id="{user_id}" AND product_id="{product_id}"')
         else:
             cursor.execute(f'DELETE FROM Cart WHERE user_id="{user_id}" AND product_id="{product_id}"')
@@ -407,7 +407,6 @@ def update_stock():
     cursor = conn.cursor()
     cursor.execute("USE scamazon")
     data = request.get_json()
-    print(data)
     product_id = data.get('p_id')
     stock = data.get('quantity')
     cursor.execute(f'UPDATE Product SET stock=stock+{stock} WHERE product_id="{product_id}"')
@@ -432,7 +431,6 @@ def dispatch():
     cursor = conn.cursor()
     cursor.execute("USE scamazon")
     data = request.get_json()
-    print(data)
     order_id = data.get('order_id')
     cursor.execute(f'UPDATE Orders SET status="Shipped" WHERE order_id="{order_id}"')
     conn.commit()
@@ -529,12 +527,7 @@ def user_orders():
     data = request.get_json()
     user_id = data.get('user_id')
     
-    cursor.execute(f'''
-        SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status
-        FROM Orders o
-        JOIN Product p ON o.product_id = p.product_id
-        WHERE o.user_id="{user_id}"
-    ''')
+    cursor.execute(f' SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status FROM Orders o JOIN Product p ON o.product_id = p.product_id WHERE o.user_id="{user_id}"')
     orders = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -551,6 +544,7 @@ def user_orders():
         })
         
     return jsonify({"orders": orders_list}), 200
+
 
 
 if __name__ == '__main__':
