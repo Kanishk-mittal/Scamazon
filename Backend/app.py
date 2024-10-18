@@ -515,6 +515,7 @@ def user_orders():
     4. price
     5. order_date
     6. status
+    7. product_name
     """
     if request.method == 'OPTIONS':
         return _build_cors_prelight_response()
@@ -530,7 +531,7 @@ def user_orders():
     user_id = data.get('user_id')
     
     cursor.execute(f'''
-        SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status
+        SELECT o.order_id, o.product_id, o.quantity, p.price, o.order_date, o.status, p.Name
         FROM Orders o
         JOIN Product p ON o.product_id = p.product_id
         WHERE o.user_id="{user_id}"
@@ -548,6 +549,7 @@ def user_orders():
             "price": order[3],
             "order_date": order[4],
             "status": order[5],
+            "p_name": order[6],  # Adding the product name here
         })
         
     return jsonify({"orders": orders_list}), 200

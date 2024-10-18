@@ -50,7 +50,7 @@ const UserDashboard = () => {
                     </div>
                     <div className="flex justify-center items-center gap-5">
                         <div>
-                            Welcome, {sellerName || 'Seller'}
+                            Welcome, {sellerName || 'User'}
                         </div>
                         <Link to="/cart" className="text-white">Cart</Link>
                         <Link to="/myorders" className="text-white">My Orders</Link>
