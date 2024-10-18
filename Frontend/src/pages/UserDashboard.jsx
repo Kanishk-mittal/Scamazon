@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import ProductCarousel from '../components/ProductCarousel';
 import Logout from '../components/Logout';
@@ -52,6 +52,8 @@ const UserDashboard = () => {
                         <div>
                             Welcome, {sellerName || 'Seller'}
                         </div>
+                        <Link to="/cart" className="text-white">Cart</Link>
+                        <Link to="/myorders" className="text-white">My Orders</Link>
                         <Logout />
                     </div>
                 </div>
