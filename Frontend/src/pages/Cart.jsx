@@ -1,15 +1,21 @@
 // Cart.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import UserNavbar from '../components/UserNavbar';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [userId, setUserId] = useState(''); // Add this line
+    const [userId, setUserId] = useState(''); 
+    const [sellerName, setSellerName] = useState(''); 
 
     useEffect(() => {
         // Fetch cart items from backend
         const userId = localStorage.getItem('userID');
         setUserId(userId);
+        // Fetch user name using axios
+        axios.post('http://localhost:5000/get_username', { user_id: userId })
+            .then(response => setSellerName(response.data.name || ''))
+            .catch(error => console.error('Error fetching user name:', error));
         const response = axios.post('http://127.0.0.1:5000/cart', {"user_id":userId}, {
             headers: {
                 'Content-Type': 'application/json'
@@ -57,6 +63,8 @@ const Cart = () => {
     }
 
     return (
+        <>
+            <UserNavbar sellerName={sellerName} />
         <div className="p-4 bg-gray-100 min-h-screen">
             <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
             {cartItems.length === 0 ? (
@@ -106,7 +114,8 @@ const Cart = () => {
                     Checkout
                 </button>
             </div>
-        </div>
+            </div>
+        </>
     );
 };
 

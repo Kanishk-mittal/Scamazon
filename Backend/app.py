@@ -666,6 +666,53 @@ def receive():
     conn.close()
     return jsonify({"message": "Order received"}), 200
 
+@app.route('/products/search', methods=['OPTIONS', 'POST'])
+@cross_origin()
+def search_products():
+    """
+    This function is used to get the products which match a specific word.
+    It takes user_id as input and returns the products available in json format
+    with attributes:
+    1. product_id
+    2. product_name
+    3. price
+    4. stock
+    5. description
+    6. image_url
+    """
+    if request.method == 'OPTIONS':
+        return _build_cors_prelight_response()
+    
+    sql_password = os.getenv('SQL_PASSWORD')
+    conn = msc.connect(
+        host="localhost",
+        user="root",
+        passwd=sql_password)
+    cursor = conn.cursor()
+    cursor.execute("USE scamazon")
+    query = request.get_json().get('query')
+    
+    # Fetch all products
+    cursor.execute(f'SELECT product_id, Name, price, stock, description,category,rating FROM Product WHERE Name LIKE "%{query}%" OR description LIKE "%{query}%" OR category LIKE "%{query}%"')
+    products = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    products_list = []  
+    for product in products:
+        products_list.append({
+            "p_id": product[0], 
+            "name": product[1], 
+            "price": product[2], 
+            "qty": product[3], 
+            "description": product[4], 
+            "image": f"/{product[0]}.png",
+            "rating": product[6],
+            "category" : product[5]
+        })
+    
+    return jsonify({"products": products_list}), 200
+
 
 
 if __name__ == '__main__':

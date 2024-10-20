@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import UserOrderCard from '../components/UserOrderCard'; // Assuming you have an UserOrderCard component
-import { Link } from 'react-router-dom';
-import Logout from '../components/Logout';
+import UserOrderCard from '../components/UserOrderCard'; 
+import UserNavbar from '../components/UserNavbar'; 
 
 const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [sellerName, setSellerName] = useState('');
-    const userId = localStorage.getItem('userID'); // Assuming userID is stored in localStorage
+    const userId = localStorage.getItem('userID');
 
     useEffect(() => {
         // Fetch user name using axios
@@ -27,28 +26,7 @@ const MyOrders = () => {
 
     return (
         <>
-            <header className="bg-blue-500 text-white p-4">
-                <div className="container mx-auto flex justify-between items-center">
-                    <div className="flex items-center">
-                        <img
-                            src="/logo.png"
-                            alt="Scamazon Logo"
-                            className="h-8 w-auto mr-2"
-                        />
-                        <Link to={`/user/${userId}`} className="text-xl font-bold">
-                            Scamazon User Dashboard
-                        </Link>
-                    </div>
-                    <div className="flex justify-center items-center gap-5">
-                        <div>
-                            Welcome, {sellerName || 'User'}
-                        </div>
-                        <Link to="/cart" className="text-white">Cart</Link>
-                        <Link to="/myorders" className="text-white">My Orders</Link>
-                        <Logout />
-                    </div>
-                </div>
-            </header>
+            <UserNavbar sellerName={sellerName} />
 
             <div className="p-4 bg-gray-100">
                 <h2 className="text-xl font-bold">My Orders</h2>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import ProductCarousel from '../components/ProductCarousel';
-import Logout from '../components/Logout';
+import UserNavbar from '../components/UserNavbar';
 
 const UserDashboard = () => {
     const [products, setProducts] = useState({});
@@ -38,26 +38,7 @@ const UserDashboard = () => {
 
     return (
         <>
-            <header className="bg-blue-500 text-white p-4">
-                <div className="container mx-auto flex justify-between items-center">
-                    <div className="flex items-center">
-                        <img
-                            src="/logo.png"
-                            alt="Scamazon Logo"
-                            className="h-8 w-auto mr-2"
-                        />
-                        <h1 className="text-xl font-bold">Scamazon User Dashboard</h1>
-                    </div>
-                    <div className="flex justify-center items-center gap-5">
-                        <div>
-                            Welcome, {sellerName || 'User'}
-                        </div>
-                        <Link to="/cart" className="text-white">Cart</Link>
-                        <Link to="/myorders" className="text-white">My Orders</Link>
-                        <Logout />
-                    </div>
-                </div>
-            </header>
+            <UserNavbar sellerName={sellerName} />
             <div className="p-4 bg-gray-100">
                 <h2>Products</h2>
                 {Object.keys(products).map((category, index) => (

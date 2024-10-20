@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import AddProduct from './pages/AddProduct';
 import Cart from './pages/Cart'; // Import Cart component
 import MyOrders from './pages/MyOrders'; // Import MyOrders component
+import Products from './pages/Products'; // Import Products component
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 function App() {
@@ -38,6 +39,10 @@ function App() {
     {
       path: '/myorders', // Add MyOrders route
       element: <MyOrders />
+    },
+    {
+      path: '/product/:query',
+      element: <Products/>
     }
   ]);
 
