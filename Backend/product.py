@@ -12,8 +12,9 @@ class Product:
     rating = None
     seller_id = None
     warranty = None
+    offer = None
 
-    def __init__(self, product_id, name, category, price, stock, seller_id, description=None, rating=None, warranty=None):
+    def __init__(self, product_id, name, category, price, stock, seller_id, description=None, rating=None, warranty=None,offer=None):
         self.product_id = product_id
         self.name = name
         self.category = category
@@ -23,12 +24,13 @@ class Product:
         self.rating = rating
         self.seller_id = seller_id
         self.warranty = warranty
+        self.offer = offer
 
     def to_sql(self):
         load_dotenv()
         con = msc.connect(host='localhost', user='root', password=os.getenv('sql_password'), database='Scamazon')
         cur = con.cursor()
-        cur.execute(f"INSERT INTO Product VALUES('{self.product_id}', '{self.name}', '{self.category}', '{self.description}', {self.price}, {self.stock}, {self.rating}, '{self.seller_id}', {self.warranty})")
+        cur.execute(f"INSERT INTO Product VALUES('{self.product_id}', '{self.name}', '{self.category}', '{self.description}', {self.price}, {self.stock}, {self.rating}, '{self.seller_id}', {self.warranty}, {self.offer})")
         con.commit()
         con.close()
 
