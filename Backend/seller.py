@@ -29,7 +29,8 @@ class seller:
         load_dotenv()
         con=msc.connect(host='localhost',user='root',password=os.getenv('sql_password'),database='Scamazon')
         cur=con.cursor()
-        cur.execute(f"INSERT INTO Seller VALUES({self.seller_id},{self.proprietor_name},{self.shop_name},{self.email},{self.password},{self.username},{self.contact},{self.address},{self.GSTIN},{self.rating})")
+        print(f"INSERT INTO Seller VALUES({self.seller_id},{self.proprietor_name},{self.shop_name},{self.email},{self.password},{self.username},{self.contact},{self.address},{self.GSTIN},{self.rating})")
+        cur.execute(f"INSERT INTO Seller VALUES('{self.seller_id}','{self.proprietor_name}','{self.shop_name}','{self.email}','{self.password}','{self.username}','{self.contact}','{self.address}','{self.GSTIN}',{self.rating})")
         con.commit()
         con.close()
     def delete_sql(self):

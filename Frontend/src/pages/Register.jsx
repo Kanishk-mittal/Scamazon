@@ -15,7 +15,8 @@ function Register() {
     const [gstin, setGstin] = useState('');
     const handelSubmit = async (e) => {
         e.preventDefault();
-        const data = [
+        const data = {
+            role: role ? 'seller' : 'buyer',
             username,
             password,
             email,
@@ -24,7 +25,7 @@ function Register() {
             p_name,
             s_name,
             gstin
-        ]
+        }
         try {
             const response = await axios.post('http://127.0.0.1:5000/register', data, {
                 headers: {
@@ -34,17 +35,14 @@ function Register() {
 
             if (response.status === 200) {
                 // Handle successful login
-                if (response.data.verified === true) {
-                    if (role) {
-                        localStorage.setItem('sellerID', response.data.id);
-                        navigate(`/seller/${response.data.id}`);
-                    } else {
-                        localStorage.setItem('userID', response.data.id);
-                        navigate(`/user/${response.data.id}`);
-                    }
-                }
-                else {
-                    alert(response.data.message);
+                console.log(response.data);
+                console.log(role);
+                if (role) {
+                    localStorage.setItem('sellerID', response.data.id);
+                    navigate(`/seller/${response.data.id}`);
+                } else {
+                    localStorage.setItem('userID', response.data.id);
+                    navigate(`/user/${response.data.id}`);
                 }
             } else {
                 alert("Some error happened");
@@ -77,7 +75,7 @@ function Register() {
                         <div className="pb-2">
                             <label htmlFor="username" className="block mb-2 text-sm font-medium text-[#000000]">Email</label>
                             <div className="relative text-gray-400">
-                                <input type="email" name="username" id="username" className="pl-5 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" placeholder="abcd@xyz.com" autoComplete="off" value={email} onChange={(e) => {setEmail(e.target.value)}} />
+                                <input type="email" name="username" id="username" className="pl-5 mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" placeholder="abcd@xyz.com" autoComplete="off" value={email} onChange={(e) => { setEmail(e.target.value) }} />
                             </div>
                         </div>
                         <div className="pb-6">

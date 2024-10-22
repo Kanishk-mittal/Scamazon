@@ -89,6 +89,7 @@ def register():
     cursor = conn.cursor()
     cursor.execute("USE scamazon")
     data=request.get_json()
+    print(data)
     role=data.get('role')
     if role=="seller":
         # seller id is of type S001 S002 etc
@@ -97,8 +98,11 @@ def register():
         cursor.close()
         conn.close()
         seller_id=int(seller_id[1:])
+        print(seller_id)
         seller_id+=1
-        seller_id="S"+str(seller_id)
+        print(seller_id)
+        seller_id="S00"+str(seller_id)
+        print(seller_id)
         proprietor_name=data.get('p_name')
         shop_name=data.get('s_name')
         email=data.get('email')
@@ -106,11 +110,11 @@ def register():
         username=data.get('username')
         contact=data.get('contact')
         address=data.get('address')
-        GSTIN=data.get('GSTIN')
+        GSTIN=data.get('gstin')
         rating=0
         seller_obj=seller(seller_id,proprietor_name,shop_name,email,password,username,contact,address,GSTIN,rating)
         seller_obj.to_sql()
-        return jsonify({"seller_id":seller_id})
+        return jsonify({"id":seller_id})
     else:
         # user id is of type U001 U002 etc
         cursor.execute("SELECT user_id FROM User ORDER BY user_id DESC LIMIT 1")
@@ -119,6 +123,7 @@ def register():
         conn.close()
         user_id=int(user_id[1:])
         user_id+=1
+        user_id="U00"+str(user_id)
         username=data.get('username')
         email=data.get('email')
         password=data.get('password')
@@ -126,7 +131,7 @@ def register():
         address=data.get('address')
         user_obj=user(user_id,username,email,password,contact,address)
         user_obj.to_sql()
-        return jsonify({"user_id":user_id})
+        return jsonify({"id":user_id})
     
 
 @app.route('/get_sellername', methods=['OPTIONS', 'POST'])
